@@ -8,7 +8,7 @@ A Neovim config based on [kickstart-modular.nvim](https://github.com/dam9000/kic
 
 ### Install Neovim
 
-This config targets _only_ [`0.10.0^`](https://github.com/neovim/neovim/releases/tag/v0.10.4) of Neovim, and support _only_ Debian and MacOS.
+This config targets _only_ [`0.11.2`](https://github.com/neovim/neovim/releases/tag/v0.11.2) of Neovim, and support _only_ Debian and MacOS.
 If you are experiencing issues, please make sure you have the correct version.
 
 ### Install this config
