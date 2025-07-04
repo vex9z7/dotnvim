@@ -19,6 +19,19 @@ return {
         adapter = 'openai',
       },
     },
+    display = {
+      chat = {
+        window = {
+          layout = 'horizontal',
+          position = 'bottom',
+          border = 'single',
+          height = 0.5,
+        },
+        token_count = function(tokens, adapter)
+          return ' (' .. tokens .. ' tokens)'
+        end,
+      },
+    },
   },
   dependencies = {
     'nvim-lua/plenary.nvim',
