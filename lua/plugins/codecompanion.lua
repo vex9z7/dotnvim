@@ -1,5 +1,7 @@
 return {
   'olimorris/codecompanion.nvim',
+  -- FIXME: reify to compatiable versions
+  enabled = false,
   opts = {
     extensions = {
       mcphub = {

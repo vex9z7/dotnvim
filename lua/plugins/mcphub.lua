@@ -1,5 +1,7 @@
 return {
   'ravitemer/mcphub.nvim',
+  -- FIXME: reify to compatiable versions
+  enabled = false,
   dependencies = {
     'nvim-lua/plenary.nvim',
   },
