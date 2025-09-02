@@ -1,17 +1,19 @@
+HAS_SET_OPENAI_TOKEN = vim.env.OPENAI_API_KEY and vim.env.OPENAI_API_KEY ~= ''
+
 return {
   'olimorris/codecompanion.nvim',
-  -- FIXME: reify to compatiable versions
-  enabled = false,
+  enabled = HAS_SET_OPENAI_TOKEN,
   opts = {
     extensions = {
-      mcphub = {
-        callback = 'mcphub.extensions.codecompanion',
-        opts = {
-          make_vars = true,
-          make_slash_commands = true,
-          show_result_in_chat = true,
-        },
-      },
+      -- FIXME: reify to compatible versions
+      -- mcphub = {
+      --   callback = 'mcphub.extensions.codecompanion',
+      --   opts = {
+      --     make_vars = true,
+      --     make_slash_commands = true,
+      --     show_result_in_chat = true,
+      --   },
+      -- },
     },
     strategies = {
       chat = {
@@ -37,7 +39,7 @@ return {
   },
   dependencies = {
     'nvim-lua/plenary.nvim',
-    'ravitemer/mcphub.nvim',
+    -- 'ravitemer/mcphub.nvim',
     'nvim-treesitter/nvim-treesitter',
     'echasnovski/mini.diff',
   },
