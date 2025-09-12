@@ -94,7 +94,6 @@ return {
         map('n', '<leader>gu', gitsigns.stage_hunk, { desc = 'git [u]ndo stage hunk' })
         map('n', '<leader>gB', gitsigns.blame, { desc = 'git [B]lame' })
         map('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'git [R]eset buffer' })
-        map('n', '<leader>gp', gitsigns.preview_hunk_inline, { desc = 'git [p]review hunk inline' })
 
         map('n', '<leader>gd', function()
           local is_vertical = is_window_vertical()

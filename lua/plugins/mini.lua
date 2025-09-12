@@ -1,3 +1,25 @@
+local function setup_mini_diff()
+  require('mini.diff').setup {
+    -- disable all default mappings
+    mappings = {
+      apply = '',
+      reset = '',
+      textobject = '',
+      goto_first = '',
+      goto_prev = '',
+      goto_next = '',
+      goto_last = '',
+    },
+  }
+
+  vim.keymap.set('n', '<leader>tp', function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    if vim.bo.buftype == '' and vim.api.nvim_buf_is_loaded(bufnr) then
+      require('mini.diff').toggle_overlay(bufnr)
+    end
+  end, { desc = '[t]oggle inline git diff [p]review' })
+end
+
 return {
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -17,10 +39,9 @@ return {
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
-      require('mini.diff').setup {
-        -- Disabled by default
-        source = require('mini.diff').gen_source.none(),
-      }
+      setup_mini_diff()
+
+      require('mini.git').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -42,4 +63,3 @@ return {
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et
