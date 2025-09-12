@@ -52,43 +52,13 @@ return {
         end, { desc = 'git [r]eset hunk' })
 
         -- normal mode
-        map(
-          'n',
-          '<leader>gs',
-          gitsigns.stage_hunk,
-          { desc = 'git [s]tage hunk' }
-        )
-        map(
-          'n',
-          '<leader>gr',
-          gitsigns.reset_hunk,
-          { desc = 'git [r]eset hunk' }
-        )
-        map(
-          'n',
-          '<leader>gS',
-          gitsigns.stage_buffer,
-          { desc = 'git [S]tage buffer' }
-        )
-        map(
-          'n',
-          '<leader>gu',
-          gitsigns.stage_hunk,
-          { desc = 'git [u]ndo stage hunk' }
-        )
-        map('n', '<leader>gB', gitsigns.blame(), { desc = 'git [B]lame' })
-        map(
-          'n',
-          '<leader>gR',
-          gitsigns.reset_buffer,
-          { desc = 'git [R]eset buffer' }
-        )
-        map(
-          'n',
-          '<leader>gp',
-          gitsigns.preview_hunk_inline,
-          { desc = 'git [p]review hunk inline' }
-        )
+        map('n', '<leader>gs', gitsigns.stage_hunk, { desc = 'git [s]tage hunk' })
+        map('n', '<leader>gr', gitsigns.reset_hunk, { desc = 'git [r]eset hunk' })
+        map('n', '<leader>gS', gitsigns.stage_buffer, { desc = 'git [S]tage buffer' })
+        map('n', '<leader>gu', gitsigns.stage_hunk, { desc = 'git [u]ndo stage hunk' })
+        map('n', '<leader>gB', gitsigns.blame, { desc = 'git [B]lame' })
+        map('n', '<leader>gR', gitsigns.reset_buffer, { desc = 'git [R]eset buffer' })
+        map('n', '<leader>gp', gitsigns.preview_hunk_inline, { desc = 'git [p]review hunk inline' })
 
         map('n', '<leader>gd', function()
           local is_vertical = is_window_vertical()
@@ -100,15 +70,19 @@ return {
           gitsigns.diffthis('@', { vertical = not is_vertical })
         end, { desc = 'git [D]iff against last commit' })
 
+        map('n', '<leader>gQ', function()
+          gitsigns.setqflist 'all'
+        end, { desc = 'add all hunks to [Q]uickfix list' })
+
+        map('n', '<leader>gq', gitsigns.setqflist, { desc = 'add buffer hunks to [q]uickfix list' })
+
         -- TODO: manage toggles by snacks.nvim
         -- Toggles
-        map(
-          'n',
-          '<leader>tb',
-          gitsigns.toggle_current_line_blame,
-          { desc = '[T]oggle git show [b]lame line' }
-        )
+        map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = '[T]oggle git show [b]lame line' })
         map('n', '<leader>tw', gitsigns.toggle_word_diff)
+
+        -- Text object
+        map({ 'o', 'x' }, 'ih', gitsigns.select_hunk)
       end,
     },
   },
