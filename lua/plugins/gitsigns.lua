@@ -120,7 +120,7 @@ return {
         map('n', '<leader>tw', gitsigns.toggle_word_diff)
 
         -- Text object
-        map({ 'o', 'x' }, 'ih', gitsigns.select_hunk)
+        map({ 'o', 'x' }, 'ih', gitsigns.select_hunk, { desc = '[i]nner git [h]unk' })
       end,
     },
   },
