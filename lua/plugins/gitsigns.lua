@@ -5,6 +5,42 @@ local function is_window_vertical()
   return 2 * height > width
 end
 
+local function pick_file_revision(callback)
+  local file = vim.fn.expand '%'
+  local cmd = string.format('git log --pretty=oneline --abbrev-commit -- %s', file)
+  local handle = io.popen(cmd)
+
+  if not handle then
+    vim.notify('Failed to run git log', vim.log.levels.ERROR)
+    return
+  end
+  local lines = {}
+  for line in handle:lines() do
+    local hash, msg = line:match '(%w+)%s(.+)'
+    if hash then
+      table.insert(lines, { hash = hash, desc = hash .. ' ' .. msg })
+    end
+  end
+
+  handle:close()
+
+  if #lines == 0 then
+    vim.notify('No git revisions found', vim.log.levels.INFO)
+    return
+  end
+
+  vim.ui.select(lines, {
+    prompt = 'Select git revision',
+    format_item = function(item)
+      return item.desc
+    end,
+  }, function(choice)
+    if choice then
+      callback(choice.hash)
+    end
+  end)
+end
+
 return {
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -66,9 +102,11 @@ return {
         end, { desc = 'git [d]iff against index' })
 
         map('n', '<leader>gD', function()
-          local is_vertical = is_window_vertical()
-          gitsigns.diffthis('@', { vertical = not is_vertical })
-        end, { desc = 'git [D]iff against last commit' })
+          pick_file_revision(function(hash)
+            local is_vertical = is_window_vertical()
+            gitsigns.diffthis(hash, { vertical = not is_vertical })
+          end)
+        end, { desc = 'git [D]iff against a revision' })
 
         map('n', '<leader>gQ', function()
           gitsigns.setqflist 'all'
