@@ -86,3 +86,8 @@ vim.opt.clipboard:append 'unnamedplus'
 -- Disable swap file and backup
 vim.o.swapfile = false
 vim.o.backup = false
+
+-- Enable incremental search: shows match results as you type
+vim.o.incsearch = true
+-- Live preview of :substitute (:%s///) command results without splitting the window
+vim.o.inccommand = 'nosplit'
