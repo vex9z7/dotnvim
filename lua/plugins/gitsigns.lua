@@ -1,18 +1,10 @@
--- Alternatively, use `config = function() ... end` for full control over the configuration.
--- If you prefer to call `setup` explicitly, use:
---    {
---        'lewis6991/gitsigns.nvim',
---        config = function()
---            require('gitsigns').setup({
---                -- Your gitsigns configuration here
---            })
---        end,
---    }
---
--- Here is a more advanced example where we pass configuration
--- options to `gitsigns.nvim`.
---
--- See `:help gitsigns` to understand what the configuration keys do
+local function is_window_vertical()
+  local win_id = vim.api.nvim_get_current_win()
+  local width = vim.api.nvim_win_get_width(win_id)
+  local height = vim.api.nvim_win_get_height(win_id)
+  return 2 * height > width
+end
+
 return {
   { -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -52,27 +44,69 @@ return {
 
         -- Actions
         -- visual mode
-        map('v', '<leader>hs', function()
+        map('v', '<leader>gs', function()
           gitsigns.stage_hunk { vim.fn.line '.', vim.fn.line 'v' }
         end, { desc = 'git [s]tage hunk' })
-        map('v', '<leader>hr', function()
+        map('v', '<leader>gr', function()
           gitsigns.reset_hunk { vim.fn.line '.', vim.fn.line 'v' }
         end, { desc = 'git [r]eset hunk' })
+
         -- normal mode
-        map('n', '<leader>hs', gitsigns.stage_hunk, { desc = 'git [s]tage hunk' })
-        map('n', '<leader>hr', gitsigns.reset_hunk, { desc = 'git [r]eset hunk' })
-        map('n', '<leader>hS', gitsigns.stage_buffer, { desc = 'git [S]tage buffer' })
-        map('n', '<leader>hu', gitsigns.stage_hunk, { desc = 'git [u]ndo stage hunk' })
-        map('n', '<leader>hR', gitsigns.reset_buffer, { desc = 'git [R]eset buffer' })
-        map('n', '<leader>hp', gitsigns.preview_hunk, { desc = 'git [p]review hunk' })
-        map('n', '<leader>hb', gitsigns.blame_line, { desc = 'git [b]lame line' })
-        map('n', '<leader>hd', gitsigns.diffthis, { desc = 'git [d]iff against index' })
-        map('n', '<leader>hD', function()
-          gitsigns.diffthis '@'
+        map(
+          'n',
+          '<leader>gs',
+          gitsigns.stage_hunk,
+          { desc = 'git [s]tage hunk' }
+        )
+        map(
+          'n',
+          '<leader>gr',
+          gitsigns.reset_hunk,
+          { desc = 'git [r]eset hunk' }
+        )
+        map(
+          'n',
+          '<leader>gS',
+          gitsigns.stage_buffer,
+          { desc = 'git [S]tage buffer' }
+        )
+        map(
+          'n',
+          '<leader>gu',
+          gitsigns.stage_hunk,
+          { desc = 'git [u]ndo stage hunk' }
+        )
+        map(
+          'n',
+          '<leader>gR',
+          gitsigns.reset_buffer,
+          { desc = 'git [R]eset buffer' }
+        )
+        map(
+          'n',
+          '<leader>gp',
+          gitsigns.preview_hunk_inline,
+          { desc = 'git [p]review hunk inline' }
+        )
+
+        map('n', '<leader>gd', function()
+          local is_vertical = is_window_vertical()
+          gitsigns.diffthis(nil, { vertical = not is_vertical })
+        end, { desc = 'git [d]iff against index' })
+
+        map('n', '<leader>gD', function()
+          local is_vertical = is_window_vertical()
+          gitsigns.diffthis('@', { vertical = not is_vertical })
         end, { desc = 'git [D]iff against last commit' })
+
+        -- TODO: manage toggles by snacks.nvim
         -- Toggles
-        map('n', '<leader>tb', gitsigns.toggle_current_line_blame, { desc = '[T]oggle git show [b]lame line' })
-        map('n', '<leader>tD', gitsigns.preview_hunk_inline, { desc = '[T]oggle git show [D]eleted' })
+        map(
+          'n',
+          '<leader>tb',
+          gitsigns.toggle_current_line_blame,
+          { desc = '[T]oggle git show [b]lame line' }
+        )
       end,
     },
   },
