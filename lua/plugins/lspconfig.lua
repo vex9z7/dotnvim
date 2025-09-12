@@ -145,11 +145,12 @@ return {
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map(
-            '<leader>ws',
-            require('telescope.builtin').lsp_dynamic_workspace_symbols,
-            'Open [W]orkspace [S]ymbols'
-          )
+          -- TODO: adjust the keymap to avoid conflict with hop
+          -- map(
+          --   '<leader>ws',
+          --   require('telescope.builtin').lsp_dynamic_workspace_symbols,
+          --   'Open [W]orkspace [S]ymbols'
+          -- )
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
