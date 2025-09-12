@@ -91,6 +91,8 @@ vim.o.incsearch = true
 -- Live preview of :substitute (:%s///) command results without splitting the window
 vim.o.inccommand = 'nosplit'
 
+vim.o.termguicolors = true
+
 -- Disable hard wrapping: lines won't auto-break at a set width when typing
 vim.o.textwidth = 0
 -- Enable soft wrapping: long lines wrap visually, not in the file
