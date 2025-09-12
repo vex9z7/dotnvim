@@ -76,6 +76,7 @@ return {
           gitsigns.stage_hunk,
           { desc = 'git [u]ndo stage hunk' }
         )
+        map('n', '<leader>gB', gitsigns.blame(), { desc = 'git [B]lame' })
         map(
           'n',
           '<leader>gR',
@@ -107,6 +108,7 @@ return {
           gitsigns.toggle_current_line_blame,
           { desc = '[T]oggle git show [b]lame line' }
         )
+        map('n', '<leader>tw', gitsigns.toggle_word_diff)
       end,
     },
   },
