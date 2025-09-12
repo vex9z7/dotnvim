@@ -42,7 +42,6 @@ vim.o.smartcase = true
 -- Keep signcolumn on by default
 vim.o.signcolumn = 'yes'
 
-
 -- Decrease mapped sequence wait time
 vim.o.timeoutlen = 300
 
@@ -78,7 +77,7 @@ vim.o.confirm = true
 vim.o.tabstop = 2
 vim.o.softtabstop = 2
 vim.o.shiftwidth = 2
-vim.o.expandtab = true
+vim.o.expandtab = false
 
 -- always use system clipboard
 vim.opt.clipboard:append 'unnamedplus'
