@@ -27,6 +27,7 @@ return {
             'lua_ls',
             'stylua',
             -- FIXME: cannot install the tools below
+            'ts_ls',
             'prettierd',
             'prettier',
             'eslint',
