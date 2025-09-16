@@ -35,15 +35,13 @@ end
 return {
   'kevinhwang91/nvim-ufo',
   dependencies = { 'kevinhwang91/promise-async' },
-  config = function()
-    require('ufo').setup {
-      provider_selector = function(bufnr, filetype, buftype)
-        return { 'treesitter', 'indent' }
-      end,
-      -- global handler
-      -- `handler` is the 2nd parameter of `setFoldVirtTextHandler`,
-      -- check out `./lua/ufo.lua` and search `setFoldVirtTextHandler` for detail.
-      fold_virt_text_handler = handler,
-    }
-  end,
+  opts = {
+    provider_selector = function(bufnr, filetype, buftype)
+      return { 'treesitter', 'indent' }
+    end,
+    -- global handler
+    -- `handler` is the 2nd parameter of `setFoldVirtTextHandler`,
+    -- check out `./lua/ufo.lua` and search `setFoldVirtTextHandler` for detail.
+    fold_virt_text_handler = handler,
+  },
 }
