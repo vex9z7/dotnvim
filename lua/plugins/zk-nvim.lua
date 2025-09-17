@@ -34,7 +34,6 @@ local function setup_mappings()
         notePath,
       },
     }, function(errr, notes)
-      vim.print { err = errr, notes = notes }
       local note = notes[1]
       if note then
         local title = note.title
@@ -130,9 +129,7 @@ local function setup_mappings()
           if title then
             options.title = title
           end
-          zkApi.new(nil, options, function(err, stats)
-            vim.print { err = err, stats = stats }
-          end)
+          zkApi.new(nil, options, function(err, stats) end)
         end
 
         if noteType ~= 'daily' then
