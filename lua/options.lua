@@ -101,3 +101,9 @@ vim.o.wrap = true
 vim.o.linebreak = true
 -- Show this symbol at the start of wrapped lines for clarity
 vim.o.showbreak = ' 󱞩 '
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    vim.cmd 'highlight Visual term=bold,italic gui=bold,italic'
+  end,
+})
