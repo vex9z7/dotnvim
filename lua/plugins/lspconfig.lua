@@ -267,6 +267,7 @@ return {
         'typescript-language-server',
         'prettierd',
         'eslint_d',
+        'checkmake',
       })
       require('mason-tool-installer').setup {
         ensure_installed = ensure_installed,
