@@ -43,10 +43,30 @@ return {
           require 'none-ls.diagnostics.eslint_d',
           require 'none-ls.code_actions.eslint_d',
 
-          -- TODO: tweak the diagnostics styling
-          -- TODO: properly config the cspell.json path
           -- see at https://github.com/davidmh/cspell.nvim
-          require 'cspell.diagnostics',
+          require('cspell.diagnostics').with {
+            -- TODO: tweak the diagnostics styling
+            -- diagnostic_config = {
+            --   -- see at :help vim.diagnostic.config()
+            --   underline = true,
+            --   virtual_text = false,
+            --   signs = false,
+            --   update_in_insert = false,
+            --   severity_sort = true,
+            -- },
+
+            diagnostics_postprocess = function(diagnostic)
+              diagnostic.severity = vim.diagnostic.severity.HINT
+            end,
+
+            -- TODO: properly config the cspell.json path
+            -- config = {
+            --   find_json = function(cwd)
+            --     local CSPELL_FALLBACK_CONFIG_PATH = vim.fn.expand '~/.config/nvim/tool-config/cspell.json'
+            --     return CSPELL_FALLBACK_CONFIG_PATH
+            --   end,
+            -- },
+          },
           require 'cspell.code_actions',
 
           -- TODO: migrate to conform
