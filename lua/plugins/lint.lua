@@ -6,6 +6,12 @@ return { -- Linting
     lint.linters_by_ft = {
       markdown = { 'markdownlint' },
       make = { 'checkmake' },
+      javascript = { 'eslint_d' },
+      typescript = { 'eslint_d' },
+      javascriptreact = { 'eslint_d' },
+      typescriptreact = { 'eslint_d' },
+      -- TODO: migrate back to none-ls to support code action
+      -- lua = { 'cspell' },
     }
 
     -- To allow other plugins to add linters to require('lint').linters_by_ft,
