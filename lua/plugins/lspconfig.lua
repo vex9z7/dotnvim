@@ -268,6 +268,7 @@ return {
         'prettierd',
         'eslint_d',
         'checkmake',
+        'cspell',
       })
       require('mason-tool-installer').setup {
         ensure_installed = ensure_installed,
