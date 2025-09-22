@@ -3,7 +3,6 @@ local function cbfmtSourceFactory()
   local methods = require 'null-ls.methods'
 
   local FORMATTING = methods.internal.FORMATTING
-
   local CBFMT_CONFIG_PATH = vim.fn.expand '~/.config/nvim/tool-config/cbfmt.toml'
 
   return helpers.make_builtin {
@@ -37,6 +36,14 @@ return {
     config = function()
       local null_ls = require 'null-ls'
 
+      vim.diagnostic.config {
+        underline = {
+          severity = {
+            min = vim.diagnostic.severity.HINT, -- INFO: underline for all severity
+          },
+        },
+      }
+
       null_ls.setup {
         sources = {
           -- see at https://github.com/nvimtools/none-ls-extras.nvim/tree/main
@@ -45,17 +52,17 @@ return {
 
           -- see at https://github.com/davidmh/cspell.nvim
           require('cspell.diagnostics').with {
-            -- TODO: tweak the diagnostics styling
-            -- diagnostic_config = {
-            --   -- see at :help vim.diagnostic.config()
-            --   underline = true,
-            --   virtual_text = false,
-            --   signs = false,
-            --   update_in_insert = false,
-            --   severity_sort = true,
-            -- },
+            diagnostic_config = {
+              -- see at :help vim.diagnostic.config()
+              underline = true,
+              virtual_text = true,
+              signs = false,
+              update_in_insert = false,
+              severity_sort = true,
+            },
 
             diagnostics_postprocess = function(diagnostic)
+              -- see :help diagnostic-severity
               diagnostic.severity = vim.diagnostic.severity.HINT
             end,
 
@@ -67,6 +74,7 @@ return {
             --   end,
             -- },
           },
+
           require 'cspell.code_actions',
 
           -- TODO: migrate to conform
