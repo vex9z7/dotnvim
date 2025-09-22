@@ -1,3 +1,41 @@
+-- A workaround to fix the exception that occurs on jumping to a css style.
+-- 2 Steps solution:
+--    1. disable ts_ls go to definition for it. See more details at https://github.com/neovim/neovim/issues/19237#issuecomment-2259638650
+--    2. install and config cssmodules-language-server from Mason. A nice catch from https://github.com/neovim/neovim/issues/19237#issuecomment-1509945822
+local tsHandlers = {
+  ['textDocument/definition'] = function(err, result, params, ...)
+    if result == nil or vim.tbl_isempty(result) then
+      return nil
+    end
+
+    if vim.islist(result) then
+      for _, value in pairs(result) do
+        local uri = value.targetUri
+        if uri == nil then
+          return nil
+        else
+          -- definition of disbaled file extensions
+          local extensions_to_check = { '.less', '.scss', '.css' } -- INFO: not sure if we should disable css as well
+
+          local function ends_with(str, suffix)
+            local str_len = string.len(str)
+            local suffix_len = string.len(suffix)
+
+            return str_len >= suffix_len and string.sub(str, -suffix_len) == suffix
+          end
+
+          for _, extension in ipairs(extensions_to_check) do
+            if ends_with(uri, extension) then
+              return nil
+            end
+          end
+        end
+      end
+    end
+    return vim.lsp.handlers['textDocument/definition'](err, result, params, ...)
+  end,
+}
+
 -- LSP Plugins
 return {
   {
@@ -277,6 +315,10 @@ return {
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
+        automatic_enable = {
+          exclude = { 'ts_ls' },
+        },
+        -- BUG: the handlers are not beeing called somehow
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -286,6 +328,22 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+        },
+      }
+
+      require('lspconfig').ts_ls.setup {
+        handlers = tsHandlers,
+        on_attach = function(client)
+          -- disable the formatting from ts_ls
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end,
+        capabilities = capabilities,
+        init_options = {
+          preferences = {
+            importModuleSpecifierPreference = 'relative',
+            importModuleSpecifierEnding = 'minimal',
+          },
         },
       }
     end,
