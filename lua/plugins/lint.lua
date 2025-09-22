@@ -6,11 +6,11 @@ return { -- Linting
     lint.linters_by_ft = {
       markdown = { 'markdownlint' },
       make = { 'checkmake' },
-      javascript = { 'eslint_d' },
-      typescript = { 'eslint_d' },
-      javascriptreact = { 'eslint_d' },
-      typescriptreact = { 'eslint_d' },
-      -- TODO: migrate back to none-ls to support code action
+      -- INFO: disabled because we use none-ls to handler code actions
+      -- javascript = { 'eslint_d' },
+      -- typescript = { 'eslint_d' },
+      -- javascriptreact = { 'eslint_d' },
+      -- typescriptreact = { 'eslint_d' },
       -- lua = { 'cspell' },
     }
 
