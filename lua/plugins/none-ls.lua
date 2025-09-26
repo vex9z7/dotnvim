@@ -3,7 +3,7 @@ local function cbfmtSourceFactory()
   local methods = require 'null-ls.methods'
 
   local FORMATTING = methods.internal.FORMATTING
-  local CBFMT_CONFIG_PATH = vim.fn.expand '~/.config/nvim/tool-config/cbfmt.toml'
+  local CBFMT_CONFIG_PATH = _G.TOOL_CONFIG_DIR .. '/cbfmt.toml'
 
   return helpers.make_builtin {
     name = 'cbfmt',
@@ -30,17 +30,27 @@ local function cbfmtSourceFactory()
 end
 
 return {
+  -- INFO: mainly used for unifying the diagnostics and the code action
   'nvimtools/none-ls.nvim',
-  dependencies = { 'nvim-lua/plenary.nvim', 'nvimtools/none-ls-extras.nvim', 'davidmh/cspell.nvim' },
+  dependencies = {
+    'nvim-lua/plenary.nvim',
+    'nvimtools/none-ls-extras.nvim',
+    'davidmh/cspell.nvim',
+  },
   config = function()
     local null_ls = require 'null-ls'
 
     vim.diagnostic.config {
       underline = {
         severity = {
-          min = vim.diagnostic.severity.HINT, -- INFO: underline for all severity
+          -- HACK: enable underline highlight for diagnostic
+          min = vim.diagnostic.severity.HINT,
         },
       },
+    }
+
+    local cspell_config = {
+      cspell_config_dirs = { _G.TOOL_CONFIG_DIR },
     }
 
     null_ls.setup {
@@ -59,22 +69,13 @@ return {
             update_in_insert = false,
             severity_sort = true,
           },
-
           diagnostics_postprocess = function(diagnostic)
             -- see :help diagnostic-severity
             diagnostic.severity = vim.diagnostic.severity.HINT
           end,
-
-          -- TODO: properly config the cspell.json path
-          -- config = {
-          --   find_json = function(cwd)
-          --     local CSPELL_FALLBACK_CONFIG_PATH = vim.fn.expand '~/.config/nvim/tool-config/cspell.json'
-          --     return CSPELL_FALLBACK_CONFIG_PATH
-          --   end,
-          -- },
+          config = cspell_config,
         },
-
-        require 'cspell.code_actions',
+        require('cspell.code_actions').with { config = cspell_config },
 
         -- TODO: migrate to conform
         -- -- shell

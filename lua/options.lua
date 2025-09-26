@@ -107,3 +107,6 @@ vim.api.nvim_create_autocmd('VimEnter', {
     vim.cmd 'highlight Visual term=bold,italic gui=bold,italic'
   end,
 })
+
+-- INFO: set the tool config path
+_G.TOOL_CONFIG_DIR = (vim.fn.stdpath 'config') .. '/tool-config/'
