@@ -45,6 +45,7 @@ return {
         severity = {
           -- HACK: enable underline highlight for diagnostic
           min = vim.diagnostic.severity.HINT,
+          max = vim.diagnostic.severity.ERROR,
         },
       },
     }
@@ -64,8 +65,8 @@ return {
           diagnostic_config = {
             -- see at :help vim.diagnostic.config()
             underline = true,
-            virtual_text = true,
             signs = false,
+            virtual_text = false,
             update_in_insert = false,
             severity_sort = true,
           },
