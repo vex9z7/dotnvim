@@ -65,14 +65,14 @@ return {
           diagnostic_config = {
             -- see at :help vim.diagnostic.config()
             underline = true,
-            signs = false,
+            signs = true,
             virtual_text = false,
             update_in_insert = false,
             severity_sort = true,
           },
           diagnostics_postprocess = function(diagnostic)
             -- see :help diagnostic-severity
-            diagnostic.severity = vim.diagnostic.severity.HINT
+            diagnostic.severity = vim.diagnostic.severity.INFO
           end,
           config = cspell_config,
         },
