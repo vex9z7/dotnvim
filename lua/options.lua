@@ -35,11 +35,13 @@ vim.schedule(function()
         ['*'] = osc52.copy '*',
       },
       paste = {
-        ['*'] = function()
-          return vim.fn.getreg '"'
-        end,
         ['+'] = function()
-          return vim.fn.getreg '"'
+          local lines = vim.split(vim.fn.getreg '"', '\n')
+          return lines
+        end,
+        ['*'] = function()
+          local lines = vim.split(vim.fn.getreg '"', '\n')
+          return lines
         end,
       },
     }
