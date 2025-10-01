@@ -305,7 +305,6 @@ return {
         'typescript-language-server',
         'prettierd',
         'eslint_d',
-        'checkmake',
         'cspell',
         'json-lsp',
       })
