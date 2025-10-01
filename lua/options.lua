@@ -22,6 +22,28 @@ vim.o.showmode = false
 --  See `:help 'clipboard'`
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
+
+  -- INFO: Configure Neovim to use OSC52 for clipboard operations in ssh terminals
+  if vim.env.SSH_TTY then
+    vim.g.clipboard = 'osc52'
+
+    local osc52 = require 'vim.ui.clipboard.osc52'
+    vim.g.clipboard = {
+      name = 'osc52',
+      copy = {
+        ['+'] = osc52.copy '+',
+        ['*'] = osc52.copy '*',
+      },
+      paste = {
+        ['*'] = function()
+          return vim.fn.getreg '"'
+        end,
+        ['+'] = function()
+          return vim.fn.getreg '"'
+        end,
+      },
+    }
+  end
 end)
 
 -- Enable break indent
@@ -78,9 +100,6 @@ vim.o.tabstop = 2
 vim.o.softtabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = false
-
--- always use system clipboard
-vim.opt.clipboard:append 'unnamedplus'
 
 -- Disable swap file and backup
 vim.o.swapfile = false
