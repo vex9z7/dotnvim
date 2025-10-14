@@ -31,7 +31,7 @@ return {
       javascriptreact = { 'eslint_d', 'prettierd' },
       typescript = { 'eslint_d', 'prettierd' },
       typescriptreact = { 'eslint_d', 'prettierd' },
-      python = { 'darker' },
+      python = { 'black' },
       rust = { 'rustfmt' },
       css = { 'stylelint', 'prettierd' },
       less = { 'stylelint', 'prettierd' },
