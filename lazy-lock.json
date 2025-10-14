@@ -1,7 +1,7 @@
 {
   "LuaSnip": { "branch": "master", "commit": "458560534a73f7f8d7a11a146c801db00b081df0" },
   "blink.cmp": { "branch": "main", "commit": "022521a8910a5543b0251b21c9e1a1e989745796" },
-  "codecompanion.nvim": { "branch": "main", "commit": "8b1b0e0fa0c2d7f9bb547bfc0efb0af94507b829" },
+  "codecompanion.nvim": { "branch": "main", "commit": "1ecccf11442b5b00d003d41c13091c235d170e6c" },
   "conform.nvim": { "branch": "master", "commit": "8132ec733eed3bf415b97b76797ca41b59f51d7d" },
   "cspell.nvim": { "branch": "main", "commit": "07d75238648ef99c0c5c05f4cfd83093d0a01dd4" },
   "dropbar.nvim": { "branch": "master", "commit": "3460930700ca67b4590a69ac3f1d65d5f9658fb6" },
