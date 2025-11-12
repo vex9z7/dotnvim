@@ -61,22 +61,23 @@ return {
         require 'none-ls.code_actions.eslint_d',
 
         -- see at https://github.com/davidmh/cspell.nvim
-        require('cspell.diagnostics').with {
-          diagnostic_config = {
-            -- see at :help vim.diagnostic.config()
-            underline = true,
-            signs = true,
-            virtual_text = false,
-            update_in_insert = false,
-            severity_sort = true,
-          },
-          diagnostics_postprocess = function(diagnostic)
-            -- see :help diagnostic-severity
-            diagnostic.severity = vim.diagnostic.severity.INFO
-          end,
-          config = cspell_config,
-        },
-        require('cspell.code_actions').with { config = cspell_config },
+        -- INFO: disabled because it add too much computtion burden
+        -- require('cspell.diagnostics').with {
+        --   diagnostic_config = {
+        --     -- see at :help vim.diagnostic.config()
+        --     underline = true,
+        --     signs = true,
+        --     virtual_text = false,
+        --     update_in_insert = false,
+        --     severity_sort = true,
+        --   },
+        --   diagnostics_postprocess = function(diagnostic)
+        --     -- see :help diagnostic-severity
+        --     diagnostic.severity = vim.diagnostic.severity.INFO
+        --   end,
+        --   config = cspell_config,
+        -- },
+        -- require('cspell.code_actions').with { config = cspell_config },
 
         -- TODO: migrate to conform
         -- -- shell
