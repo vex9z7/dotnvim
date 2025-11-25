@@ -27,10 +27,10 @@ vim.schedule(function()
     vim.g.clipboard = 'wl-copy'
   elseif vim.env.DISPLAY then
     vim.g.clipboard = 'xclip'
+  elseif vim.env.TMUX then
+    vim.g.clipboard = 'tmux'
   elseif vim.env.SSH_TTY then
     -- INFO: Configure Neovim to use OSC52 for clipboard operations in ssh terminals
-    vim.g.clipboard = 'osc52'
-
     local osc52 = require 'vim.ui.clipboard.osc52'
     vim.g.clipboard = {
       name = 'osc52',
