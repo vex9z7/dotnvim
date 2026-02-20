@@ -42,6 +42,6 @@ return {
       mdx = { 'prettierd' },
       graphql = { 'prettierd' },
     },
-    default_format_opts = { timeout_ms = 1500, lsp_format = 'fallback' },
+    default_format_opts = { timeout_ms = 3000, lsp_format = 'fallback' },
   },
 }
