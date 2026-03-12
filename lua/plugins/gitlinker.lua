@@ -26,6 +26,18 @@ return {
         ['repo.or.cz'] = require('gitlinker.hosts').get_repoorcz_type_url,
         ['git.kernel.org'] = require('gitlinker.hosts').get_cgit_type_url,
         ['git.savannah.gnu.org'] = require('gitlinker.hosts').get_cgit_type_url,
+
+        -- INFO: confidential
+        ['github-trans-n'] = function(url_data)
+          local raw_url = require('gitlinker.hosts').get_github_type_url(url_data)
+
+          -- TODO: replace the first 'github-trans-n' to 'github.com'
+
+          -- Replace only the first occurrence of 'github-trans-n' with 'github.com'
+          local url = string.gsub(raw_url, 'github%-trans%-n', 'github.com', 1)
+
+          return url
+        end,
       },
       -- default mapping to call url generation with action_callback
       mappings = nil,
