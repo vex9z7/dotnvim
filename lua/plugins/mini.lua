@@ -1,21 +1,32 @@
+local function setup_mini_diff()
+  require('mini.diff').setup {
+    -- disable all default mappings
+    mappings = {
+      apply = '',
+      reset = '',
+      textobject = '',
+      goto_first = '',
+      goto_prev = '',
+      goto_next = '',
+      goto_last = '',
+    },
+  }
+
+  vim.keymap.set('n', '<leader>tp', function()
+    local bufnr = vim.api.nvim_get_current_buf()
+    if vim.bo.buftype == '' and vim.api.nvim_buf_is_loaded(bufnr) then
+      require('mini.diff').toggle_overlay(bufnr)
+    end
+  end, { desc = '[t]oggle inline git diff [p]review' })
+end
+
 return {
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
     config = function()
-      -- Better Around/Inside textobjects
-      --
-      -- Examples:
-      --  - va)  - [V]isually select [A]round [)]paren
-      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
-      --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      setup_mini_diff()
 
-      -- Add/delete/replace surroundings (brackets, quotes, etc.)
-      --
-      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
-      -- - sd'   - [S]urround [D]elete [']quotes
-      -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      require('mini.git').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
@@ -37,4 +48,3 @@ return {
     end,
   },
 }
--- vim: ts=2 sts=2 sw=2 et

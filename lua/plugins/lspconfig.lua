@@ -1,3 +1,41 @@
+-- A workaround to fix the exception that occurs on jumping to a css style.
+-- 2 Steps solution:
+--    1. disable ts_ls go to definition for it. See more details at https://github.com/neovim/neovim/issues/19237#issuecomment-2259638650
+--    2. install and config cssmodules-language-server from Mason. A nice catch from https://github.com/neovim/neovim/issues/19237#issuecomment-1509945822
+local tsHandlers = {
+  ['textDocument/definition'] = function(err, result, params, ...)
+    if result == nil or vim.tbl_isempty(result) then
+      return nil
+    end
+
+    if vim.islist(result) then
+      for _, value in pairs(result) do
+        local uri = value.targetUri
+        if uri == nil then
+          return nil
+        else
+          -- definition of disbaled file extensions
+          local extensions_to_check = { '.less', '.scss', '.css' } -- INFO: not sure if we should disable css as well
+
+          local function ends_with(str, suffix)
+            local str_len = string.len(str)
+            local suffix_len = string.len(suffix)
+
+            return str_len >= suffix_len and string.sub(str, -suffix_len) == suffix
+          end
+
+          for _, extension in ipairs(extensions_to_check) do
+            if ends_with(uri, extension) then
+              return nil
+            end
+          end
+        end
+      end
+    end
+    return vim.lsp.handlers['textDocument/definition'](err, result, params, ...)
+  end,
+}
+
 -- LSP Plugins
 return {
   {
@@ -6,9 +44,7 @@ return {
     'folke/lazydev.nvim',
     ft = 'lua',
     opts = {
-      library = {
-        -- Load luvit types when the `vim.uv` word is found
-        { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+      library = { -- Load luvit types when the `vim.uv` word is found { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
   },
@@ -21,6 +57,7 @@ return {
       -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
+
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       -- Useful status updates for LSP.
@@ -98,11 +135,16 @@ return {
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
-          map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
+          map('<leader>ds', require('telescope.builtin').lsp_document_symbols, 'Open [D]ocument [S]ymbols')
 
           -- Fuzzy find all the symbols in your current workspace.
           --  Similar to document symbols, except searches over your entire project.
-          map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
+          -- TODO: adjust the keymap to avoid conflict with hop
+          -- map(
+          --   '<leader>ws',
+          --   require('telescope.builtin').lsp_dynamic_workspace_symbols,
+          --   'Open [W]orkspace [S]ymbols'
+          -- )
 
           -- Jump to the type of the word under your cursor.
           --  Useful when you're not sure what type a variable is and you want to see
@@ -128,7 +170,10 @@ return {
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
-          if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
+          if
+            client
+            and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf)
+          then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -146,7 +191,10 @@ return {
               group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
               callback = function(event2)
                 vim.lsp.buf.clear_references()
-                vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+                vim.api.nvim_clear_autocmds {
+                  group = 'kickstart-lsp-highlight',
+                  buffer = event2.buf,
+                }
               end,
             })
           end
@@ -253,12 +301,25 @@ return {
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'lua-language-server',
+        'typescript-language-server',
+        'prettierd',
+        'eslint_d',
+        'json-lsp',
+        'pyright',
+        'darker',
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup {
+        ensure_installed = ensure_installed,
+      }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
         automatic_installation = false,
+        automatic_enable = {
+          exclude = { 'ts_ls' },
+        },
+        -- BUG: the handlers are not beeing called somehow
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -268,6 +329,22 @@ return {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+        },
+      }
+
+      require('lspconfig').ts_ls.setup {
+        handlers = tsHandlers,
+        on_attach = function(client)
+          -- disable the formatting from ts_ls
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentRangeFormattingProvider = false
+        end,
+        capabilities = capabilities,
+        init_options = {
+          preferences = {
+            importModuleSpecifierPreference = 'relative',
+            importModuleSpecifierEnding = 'minimal',
+          },
         },
       }
     end,

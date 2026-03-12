@@ -3,8 +3,9 @@
 -- NOTE: You can change these options as you wish!
 --  For more options, you can see `:help option-list`
 
--- Make line numbers default
+-- Make line numbers and relative number default
 vim.o.number = true
+vim.o.relativenumber = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.o.relativenumber = true
@@ -21,6 +22,34 @@ vim.o.showmode = false
 --  See `:help 'clipboard'`
 vim.schedule(function()
   vim.o.clipboard = 'unnamedplus'
+
+  if vim.env.WAYLAND_DISPLAY then
+    vim.g.clipboard = 'wl-copy'
+  elseif vim.env.DISPLAY then
+    vim.g.clipboard = 'xclip'
+  elseif vim.env.TMUX then
+    vim.g.clipboard = 'tmux'
+  elseif vim.env.SSH_TTY then
+    -- INFO: Configure Neovim to use OSC52 for clipboard operations in ssh terminals
+    local osc52 = require 'vim.ui.clipboard.osc52'
+    vim.g.clipboard = {
+      name = 'osc52',
+      copy = {
+        ['+'] = osc52.copy '+',
+        ['*'] = osc52.copy '*',
+      },
+      paste = {
+        ['+'] = function()
+          local lines = vim.split(vim.fn.getreg '"', '\n')
+          return lines
+        end,
+        ['*'] = function()
+          local lines = vim.split(vim.fn.getreg '"', '\n')
+          return lines
+        end,
+      },
+    }
+  end
 end)
 
 -- Enable break indent
@@ -28,6 +57,11 @@ vim.o.breakindent = true
 
 -- Save undo history
 vim.o.undofile = true
+vim.o.undodir = vim.env.HOME .. '/.config/nvim/undo'
+
+-- number of undo saved
+vim.o.undolevels = 10000
+vim.o.undoreload = 10000
 
 -- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
 vim.o.ignorecase = true
@@ -35,9 +69,6 @@ vim.o.smartcase = true
 
 -- Keep signcolumn on by default
 vim.o.signcolumn = 'yes'
-
--- Decrease update time
-vim.o.updatetime = 250
 
 -- Decrease mapped sequence wait time
 vim.o.timeoutlen = 300
@@ -55,7 +86,14 @@ vim.o.splitbelow = true
 --   See `:help lua-options`
 --   and `:help lua-options-guide`
 vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = {
+  tab = '» ',
+  trail = '·',
+  space = '·',
+  nbsp = '␣',
+  extends = '⟩',
+  precedes = '⟨',
+}
 
 -- Preview substitutions live, as you type!
 vim.o.inccommand = 'split'
@@ -71,4 +109,36 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
--- vim: ts=2 sts=2 sw=2 et
+vim.o.tabstop = 2
+vim.o.softtabstop = 2
+vim.o.shiftwidth = 2
+vim.o.expandtab = false
+
+-- Disable swap file and backup
+vim.o.swapfile = false
+vim.o.backup = false
+
+-- Enable incremental search: shows match results as you type
+vim.o.incsearch = true
+-- Live preview of :substitute (:%s///) command results without splitting the window
+vim.o.inccommand = 'nosplit'
+
+vim.o.termguicolors = true
+
+-- Disable hard wrapping: lines won't auto-break at a set width when typing
+vim.o.textwidth = 0
+-- Enable soft wrapping: long lines wrap visually, not in the file
+vim.o.wrap = true
+-- Wrap at word boundaries instead of mid-word
+vim.o.linebreak = true
+-- Show this symbol at the start of wrapped lines for clarity
+vim.o.showbreak = ' 󱞩 '
+
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    vim.cmd 'highlight Visual term=bold,italic gui=bold,italic'
+  end,
+})
+
+-- INFO: set the tool config path
+_G.TOOL_CONFIG_DIR = (vim.fn.stdpath 'config') .. '/tool-config/'

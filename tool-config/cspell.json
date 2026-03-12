@@ -1,0 +1,40 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "flagWords": [],
+  "language": "en",
+  "dictionaries": [
+    "bash",
+    "typescript",
+    "node",
+    "python",
+    "html",
+    "css",
+    "cpp",
+    "latex",
+    "npm",
+    "google",
+    "cpp-refined",
+    "data-science",
+    "en_us"
+  ],
+  "words": [
+    "mujin",
+    "webui",
+    "itlhub",
+    "typia",
+    "netrw",
+    "CUDA",
+    "clicky",
+    "corne",
+    "uniqlo",
+    "craco",
+    "dunst",
+    "noice",
+    "Rsbuild",
+    "aabb",
+    "Togglable",
+    "uicore"
+  ],
+  "version": "0.2",
+  "allowCompoundWords": true
+}
