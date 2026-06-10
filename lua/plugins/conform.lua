@@ -37,7 +37,7 @@ return {
       less = { 'stylelint', 'prettierd' },
       json = { 'prettierd' },
       jsonc = { 'prettierd' },
-      yaml = { 'prettierd' },
+      yaml = { 'yamllint', 'yamlfmt' },
       markdown = { 'prettierd' },
       mdx = { 'prettierd' },
       graphql = { 'prettierd' },
